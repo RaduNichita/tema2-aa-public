@@ -1,0 +1,39 @@
+{
+    "name": "Octavian's saga",
+    "deps": [
+        "gcc",
+        "g++",
+        "javac",
+        "python3"
+    ],
+    "tasks": [
+        {
+            "name": "trial",
+            "points": 40,
+            "tests": 20,
+            "timeout": 8,
+            "stdin": true,
+            "stdout": true,
+            "valgrind": false
+        },
+        {
+            "name": "rise",
+            "points": 20,
+            "tests": 20,
+            "timeout": 8,
+            "stdin": true,
+            "stdout": true,
+            "valgrind": false
+        },
+        {
+            "name": "redemption",
+            "points": 30,
+            "tests": 10,
+            "timeout": 2,
+            "stdin": true,
+            "stdout": true,
+            "valgrind": false
+        }
+    ],
+    "penalty_readme": 10
+}

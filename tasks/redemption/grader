@@ -1,0 +1,106 @@
+#!/usr/bin/python3
+
+import inspect
+import pathlib
+import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(
+    inspect.getfile(inspect.currentframe())))
+root_dir = pathlib.Path(current_dir).parent.parent
+sys.path.insert(0, str(root_dir))
+
+LOWER_THRESHOLD = 0.5
+UPPER_THRESHOLD = 0.8
+
+from check_utils.grader import Grader
+
+class RedemptionGrader(Grader):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+    def parse_output(self, output):
+        expected_lines = 2
+
+        if len(output) == 0:
+            self.exit(code=-1, err=f"Output is empty")
+
+        if len(output) != expected_lines:
+            self.exit(code=-1, err=f"Expected {expected_lines}, but got {len(output)} lines")
+
+        return output[0], output[1]
+
+    def compute_score(self, given_elems, expected_elems, given_sets, expected_sets):
+        factor1 = (min(given_elems, expected_elems) / expected_elems)
+        factor2 = 1 - ((abs(given_sets - expected_sets)) / expected_sets)
+
+        return 0.5 * factor1 + 0.5 * factor2
+
+    def grade_test(self):
+        try:
+            input, output, ref = self.read()
+            input = [x.strip("\n") for x in input]
+            output = [x.strip("\n") for x in output]
+            ref = [x.strip("\n") for x in ref]
+        except:
+            self.exit(code=-1, err=f"not valid input")
+
+        set_size, set_indexes=self.parse_output(output)
+        expected_sets = ref[0]
+
+        try:
+            set_size = int(set_size)
+        except:
+            self.exit(code=-1, err=f"Size of set is not an integer")
+
+        try:
+            set_indexes = [int(x) for x in set_indexes.split(" ")[:set_size]]
+        except:
+            self.exit(code=-1, err=f"Indexes contains non-integer values")
+
+        n, m, p = [int(x) for x in input[0].split(" ")]
+        input = input[1:]
+
+        if (set_size > p):
+            self.exit(code=-1, err=f"Expected a set of size at most {p}, but got a set of size {set_size}")
+
+        given_cards, input = input[:n], input[n:]
+        requested_cards, input = input[:m], input[m:]
+        sets = []
+        for _ in range(p):
+            size, input = int(input[0]), input[1:]
+            s = set()
+            for _ in range(size):
+                name, input = input[0], input[1:]
+                s.add(name)
+            sets.append(s)
+
+        reunion = set()
+        for index in set_indexes:
+            if index - 1 < 0 or index - 1 >= p:
+                self.exit(code=-1, err=f"Not a valid index: {index}. The value should be between 1 and {m}")
+            for elem in sets[index - 1]:
+                reunion.add(elem)
+
+        for card in given_cards:
+            reunion.add(card)
+
+        count_non_present = 0
+        for card in requested_cards:
+            if card not in reunion:
+                count_non_present += 1
+
+        score = self.compute_score(int(len(requested_cards)) - count_non_present, int(len(requested_cards)), int(set_size), int(expected_sets))
+        if (score < LOWER_THRESHOLD):
+            self.add_points(0)
+        elif (score > UPPER_THRESHOLD):
+            self.add_points(self.max_points)
+        else:
+            points = ((score - LOWER_THRESHOLD) / (UPPER_THRESHOLD - LOWER_THRESHOLD)) * self.max_points
+            self.add_points(points)
+
+
+if __name__ == '__main__':
+    assert len(sys.argv) == 5, sys.argv
+    RedemptionGrader(sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]).run()
