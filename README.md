@@ -51,40 +51,58 @@ După rularea checker-ului, pentru fiecare test este generat un fișier de outpu
 
 ### Mod de testare
 
-* `trial` : fișierele de referință conțin doar `True` sau `False`, reprezentând dacă fișierul de input are sau nu soluție.
+1. `trial` : fișierele de referință conțin doar `True` sau `False`, reprezentând dacă fișierul de input are sau nu soluție.
 Dacă răspunsul este `True`, checker-ul va verifica că indicii afisați formează un set cover valid.
 
-* `rise` : fișierele de referință conține numărul minim de pachețele achiziționate. Checker-ul va verifica că indicii pachețelelor afisațe conțin cărțile dorite.
+1. `rise` : fișierele de referință conține numărul minim de pachețele achiziționate.
+Checker-ul va verifica că indicii pachețelelor afisațe conțin cărțile dorite.
 
-* `redemption` : fișierele de referință conține numărul minim de pachețele achiziționate. Checker-ul va verifica că indicii pachețelelor afisațe conțin cărțile dorite.
+1. `redemption` : fișierele de referință conține numărul minim de pachețele achiziționate.
+Checker-ul va verifica că indicii pachețelelor afisațe conțin cărțile dorite.
 
-Pentru a măsura performanța algoritmului vom folosi următoarea formulă:
+    Pentru a măsura performanța algoritmului vom folosi următoarea formulă:
 
-```python
-factor1 = (min(given_elems, expected_elems) / expected_elems)
+    ```python
+    factor1 = (min(given_elems, expected_elems) / expected_elems)
 
-factor2 = 1 - ((abs(given_sets - expected_sets)) / expected_sets)
+    factor2 = 1 - ((abs(given_sets - expected_sets)) / expected_sets)
 
-return 0.5 * factor1 + 0.5 * factor2
-```
+    return 0.5 * factor1 + 0.5 * factor2
+    ```
 
-unde
+    unde
 
-* given_sets = numărul de pachețele date în soluția voastră
-* expected_sets-uri = numărul de pachețele din soluția optimă
-* given_elems = cărțile necesare date în soluția voastră
-* expected_elems = cărțile necesare
+    * given_sets = numărul de pachețele date în soluția voastră
+    * expected_sets-uri = numărul de pachețele din soluția optimă
+    * given_elems = cărțile necesare date în soluția voastră
+    * expected_elems = cărțile necesare
 
-Punctarea se va face astfel:
+    Punctarea se va face astfel:
 
-* un scor `<= 0.6` va fi punctat cu 0p
-* un scor `>= 0.9` va fi punctat cu 3p, punctajul maxim pe test.
-* un scor s între 0.6 și 0.9 va fi punctat liniar după formula:
-```
-    punctaj = (s - 0.6) / (0.9 - 0.6) * 3p
-```
+    * un scor `<= 0.5` va fi punctat cu 0p
+    * un scor `>= 0.8` va fi punctat cu 3p, punctajul maxim pe test.
+    * un scor s între 0.5 și 0.8 va fi punctat liniar după formula:
+    ```
+        punctaj = (s - 0.5) / (0.8 - 0.5) * 3p
+    ```
 
-Exemplu:
+    Exemplu:
 
-1. un scor de `0.75` va obține `1.5p / 3p`
-1. un scor de `0.8` va fi punctat cu `2p / 3p`
+    1. un scor de `0.65` va obține `1.5p / 3p`
+    1. un scor de `0.7` va fi punctat cu `2p / 3p`
+
+
+1. `bonus` : tema are un bonus de `20p` și se poate obține prin trecerea a 5 teste private de pe vmchecker pentru task-ul `rise`. Punctarea se va face astfel:
+
+    * un scor `<= 0.71` va fi punctat cu 0p
+    * un scor `>= 0.91` va fi punctat cu 4p, punctajul maxim pe test.
+    * un scor s între 0.71 și 0.91 va fi punctat liniar după formula:
+    ```
+        punctaj = (s - 0.71) / (0.91 - 0.71) * 4p
+    ```
+
+### Precizări README
+
+README-ul aferent temei va conține ideea de rezolvare a task-urilor, dar și complexitatea soluțiilor propuse.
+În cazul împrumutului de idei, vă rugăm să treceți, la sfârșitul fișierului README, aferent temei, în secțiunea Referințe, elementele preluate, alături de sursele utilizate.
+Acestea din urmă pot fi cărți, articole de pe internet etc.
